@@ -14,6 +14,15 @@ public class Task {
 
     }
 
+    public Task(Task otherTask){
+        this.id = otherTask.getId();
+        this.userId = otherTask.getUserId();
+        this.title = otherTask.getTitle();
+        this.taskDescription = otherTask.getDescription();
+        this.completed = otherTask.getCompleteStatus();
+        this.createdAt = otherTask.getCreationDate();
+    }
+
     @Override
     public String toString() {
         return this.id + ", " + this.userId +  ", " + this.title + ", " + this.taskDescription + ", " + String.valueOf(this.completed) + ", " + this.createdAt.toString();

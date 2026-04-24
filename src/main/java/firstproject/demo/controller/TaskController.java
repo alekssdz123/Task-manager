@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +32,6 @@ public class TaskController {
     @GetMapping
     public List<Task> getAll(@RequestParam String userId){
         logger.info("GET request: get all tasks");
-        logger.info("GET request: userId: " + userId);
         return service.getUserTasks(userId);
     }
     @PostMapping
@@ -53,4 +53,12 @@ public class TaskController {
         logger.info("DELETE request: delete task by id");
         service.deleteTask(id);
     }
+
+    @PutMapping("/{id}/complete")
+    public void markTaskAsComplete(@PathVariable String id){
+        logger.info("PUT REQUEST: mark task as completed");
+        service.markAsCompleted(id);
+    }
+
+    // ADD FILTERING BY COMPLETE STATUS LATER (Uncolmpleted first)
 }

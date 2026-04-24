@@ -38,43 +38,20 @@ async function getAllTasks(){
     return data;
 }
 
-function createHtmlTaskCard(taskData){
-    const taskDiv = document.createElement("div");
-    if(taskData.completeStatus == false){
-        taskDiv.className = "task";
-    } else{
-        taskDiv.className = "task completed";
-    }
-    
-    const taskInfo = document.createElement("div");
-    const taskTitle = document.createElement("h3");
-    const taskDescription = document.createElement("p");
-    const creationDate = document.createElement("p");
-    taskInfo.className = "task-info";
-    taskTitle.textContent = taskData.title;
-    taskDescription.textContent = taskData.description;
-    creationDate.textContent = taskData.creationDate;
-    
-    taskInfo.appendChild(taskTitle);
-    taskInfo.appendChild(taskDescription);
-    taskInfo.appendChild(creationDate);
-    
-    const taskButtons = document.createElement("div");
-    const doneBtn = document.createElement("button");
-    const deleteBtn = document.createElement("button");
-    doneBtn.textContent = "✓"
-    deleteBtn.textContent = "✕"
-    taskButtons.className = "task-actions";
-    doneBtn.className = "done";
-    deleteBtn.className = "delete";
-    
-    taskButtons.appendChild(doneBtn);
-    taskButtons.appendChild(deleteBtn);
-    
-    taskDiv.appendChild(taskInfo);
-    taskDiv.appendChild(taskButtons);
-    
-    return taskDiv;
+function createHtmlTaskCard(taskData) {
+    return `
+        <div class="task ${taskData.completeStatus ? "completed" : ""}" data-id="${taskData.id}">
+            <div class="task-info">
+                <h3>${taskData.title}</h3>
+                <p>${taskData.description}</p>
+                <p>${taskData.creationDate}</p>
+            </div>
+            <div class="task-actions">
+                <button class="done" data-id="${taskData.id}" onclick="markComplete(this.dataset.id)">✓</button>
+                <button class="delete" data-id="${taskData.id}" onclick="deleteTask(this.dataset.id)">✕</button>
+            </div>
+        </div>
+    `;
 }
 
 async function showTasks(){
@@ -85,7 +62,7 @@ async function showTasks(){
 
     tasks.forEach(task => {
         const htmlCard = createHtmlTaskCard(task);
-        container.appendChild(htmlCard);
+        container.innerHTML += htmlCard;
     });
 }
 
@@ -97,3 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
     eventListener();
     showTasks();
 })
+
+async function markComplete(id){
+    try{
+        const response = await fetch( tasksApiUrl + "/" + id + "/complete", {method: "PUT"})
+        showTasks();
+    } catch(e){
+
+    }
+}

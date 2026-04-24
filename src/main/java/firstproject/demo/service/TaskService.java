@@ -17,7 +17,7 @@ public class TaskService {
     }
 
     public ArrayList<Task> getAllTasks(){
-        return this.tasks;
+        return new ArrayList<>(this.tasks);
     }
 
     public ArrayList<Task> getUserTasks(String userId){
@@ -50,4 +50,14 @@ public class TaskService {
         }
         return null;
     }
+
+    public Task markAsCompleted(String taskId){
+        Task task = getById(taskId);
+        if(task == null){
+            return null;
+        }
+        task.setCompleteStatus(true);
+        return task;
+    }
 }
+
