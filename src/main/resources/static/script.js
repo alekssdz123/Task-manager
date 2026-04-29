@@ -2,8 +2,17 @@ const tasksApiUrl = "http://localhost:8080/api/tasks";
 const userId = "rampampam";
 
 
+function isEmpty(input){
+    if(input.trim() === ""){
+        return true;
+    } return false;
+}
+
 function getNewTaskData(){
     const title = document.getElementById("taskTitle").value;
+    if(isEmpty(title)){
+        return false;
+    }
     const description = document.getElementById("taskDescription").value;
     const data = {
         "title": title,
@@ -16,6 +25,10 @@ function getNewTaskData(){
 
 async function addTask(){
     const newTaskData = getNewTaskData();
+    if(newTaskData === false){
+        alert("Empty task name!");
+        return;
+    }
     const response = await fetch(tasksApiUrl, {
         method: "POST",
         headers: {
@@ -26,7 +39,7 @@ async function addTask(){
             "title": newTaskData.title,
             "taskDescription": newTaskData.taskDescription
         })
-    })
+    });
     const data = await response.json();
     console.log(data);
     showTasks();
