@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Task Manager</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/css/tasks.css}">
 </head>
 <body>
+    <div class="top-bar">
+        <button id="authBtn">Войти</button>
+    </div>
 
 <div class="container">
 
     <h1>Task Manager</h1>
+
 
     <!-- Creating task form -->
     <div class="task-form">
@@ -25,6 +29,6 @@
 
 </div>
 
-<script src="script.js"></script>
+<script th:src="@{/scripts/tasks.js}"></script>
 </body>
 </html>

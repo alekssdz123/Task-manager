@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 0;
+}
+
+
+.login-container {
+    width: 350px;
+    margin: 120px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Форма */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #4caf50;
+}
+
+
+.login-form button {
+    padding: 10px;
+    border: none;
+    background: #4caf50;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.login-form button:hover {
+    background: #45a049;
+}
+
+/* Ссылка */
+.register-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.register-link a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
