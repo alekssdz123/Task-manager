@@ -38,7 +38,6 @@ public class TaskController {
     public Task addTask(@RequestBody Task task){ // Create Task object task from JSON
         logger.info("POST request: add new task");
         Task savedTask = service.addTask(task);
-        System.out.println(savedTask);
         return savedTask;
     }
 

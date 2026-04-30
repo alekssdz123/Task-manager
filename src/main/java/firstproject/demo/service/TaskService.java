@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import firstproject.demo.model.Task;
+import firstproject.demo.exception.InvalidDataException;
+import firstproject.demo.exception.NotFoundException;
 
 @Service
 public class TaskService {
@@ -31,6 +33,9 @@ public class TaskService {
     }
 
     public Task addTask(Task task) {
+        if(task.getTitle() == null || task.getTitle().isBlank()) {
+            throw new InvalidDataException("Task name is not valid");
+        }
         task.setId(UUID.randomUUID().toString());
         task.setCreationDate(LocalDate.now());
         task.setCompleteStatus(false);
@@ -38,24 +43,22 @@ public class TaskService {
         return task;
     }
 
-    public void deleteTask(String taskId){
-        tasks.removeIf(task -> taskId.equals(task.getId()));
-    }
-
     public Task getById(String taskId){
         for(Task task : this.tasks){
-            if(task.getId().equals(taskId)){
+            if(taskId.equals(task.getId())){
                 return task;
             }
         }
-        return null;
+        throw new NotFoundException("Task not found");
     }
 
+    public void deleteTask(String taskId){
+        Task task = getById(taskId);
+        tasks.remove(task);
+    }
+    
     public Task markAsCompleted(String taskId){
         Task task = getById(taskId);
-        if(task == null){
-            return null;
-        }
         task.setCompleteStatus(true);
         return task;
     }
