@@ -60,12 +60,13 @@ function createHtmlTaskCard(taskData) {
                 <p>${taskData.creationDate}</p>
             </div>
             <div class="task-actions">
-                <button class="done" data-id="${taskData.id}" onclick="markComplete(this.dataset.id)">✓</button>
-                <button class="delete" data-id="${taskData.id}" onclick="deleteTask(this.dataset.id)">✕</button>
+            ${taskData.completeStatus ? '' : `            
+                    <button class="done" data-id="${taskData.id}" onclick="markComplete(this.dataset.id)">✓</button>
+            `}
+                    <button class="delete" data-id="${taskData.id}" onclick="deleteTask(this.dataset.id)">✕</button>
+                </div>
             </div>
-        </div>
-    `;
-}
+    `};
 
 async function showTasks(){
     const tasks = await getAllTasks();
@@ -90,7 +91,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function markComplete(id){
     try{
-        const response = await fetch( tasksApiUrl + "/" + id + "/complete", {method: "PUT"})
+        const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT"});
+        showTasks();
+    } catch(e){
+
+    }
+}
+
+async function deleteTask(id){
+    try{
+        const response = await fetch(tasksApiUrl + "/" + id, {method: "DELETE"});
         showTasks();
     } catch(e){
 

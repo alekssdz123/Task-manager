@@ -90,9 +90,14 @@ h1 {
 }
 
 /* Completed task */
+
 .completed {
+    opacity: 1;
+}
+
+.completed h3,
+.completed p {
     opacity: 0.6;
-    text-decoration: line-through;
 }
 
 /* Верхняя панель */
