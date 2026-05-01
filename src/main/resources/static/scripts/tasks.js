@@ -7,13 +7,34 @@ function isEmpty(input){
         return true;
     } return false;
 }
+function validTitle(title){
+    if(title.length > 100){
+        return false;
+    } return true;
+}
+function validDescription(description){
+    if(description.length > 1000){
+        return false;
+    } return true;
+}
 
 function getNewTaskData(){
     const title = document.getElementById("taskTitle").value;
+    const description = document.getElementById("taskDescription").value;
+
     if(isEmpty(title)){
+        showError("Empty task name!");
         return false;
     }
-    const description = document.getElementById("taskDescription").value;
+    if(!validTitle(title)){
+        showError("Title can not be longer than 100 symbols!");
+        return false;
+    }
+    if(!validDescription(description)){
+        showError("Description can not be longer than 1000 symbols!");
+        return false;
+    }
+
     const data = {
         "title": title,
         "taskDescription": description
@@ -25,8 +46,7 @@ function getNewTaskData(){
 
 async function addTask(){
     const newTaskData = getNewTaskData();
-    if(newTaskData === false){
-        showError("Empty task name!");
+    if(!newTaskData){
         return;
     }
     const response = await fetch(tasksApiUrl, {
@@ -97,7 +117,7 @@ function eventListener(){
 document.addEventListener("DOMContentLoaded", () => {
     eventListener();
     showTasks();
-    
+
     document.getElementById("errorModal").addEventListener("click", function(e) {
     if (e.target === this) {
         closeError();
