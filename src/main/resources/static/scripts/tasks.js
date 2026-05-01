@@ -26,7 +26,7 @@ function getNewTaskData(){
 async function addTask(){
     const newTaskData = getNewTaskData();
     if(newTaskData === false){
-        alert("Empty task name!");
+        showError("Empty task name!");
         return;
     }
     const response = await fetch(tasksApiUrl, {
@@ -40,6 +40,10 @@ async function addTask(){
             "taskDescription": newTaskData.taskDescription
         })
     });
+    if(!response.ok){
+        showError("Failed to save task!");
+        return null;
+    }
     const data = await response.json();
     console.log(data);
     showTasks();
@@ -47,6 +51,10 @@ async function addTask(){
 
 async function getAllTasks(){   
     const response = await fetch(tasksApiUrl + "?userId=" + userId);
+    if(!response.ok){
+        showError("Failed to get your tasks!");
+        return;
+    }
     const data = await response.json();
     return data;
 }
@@ -70,7 +78,9 @@ function createHtmlTaskCard(taskData) {
 
 async function showTasks(){
     const tasks = await getAllTasks();
-
+    if(tasks === null){
+        return;
+    }
     const container = document.getElementById("task-list");
     container.innerHTML = "";
 
@@ -87,22 +97,35 @@ function eventListener(){
 document.addEventListener("DOMContentLoaded", () => {
     eventListener();
     showTasks();
+    
+    document.getElementById("errorModal").addEventListener("click", function(e) {
+    if (e.target === this) {
+        closeError();
+    }
+});
 })
 
 async function markComplete(id){
-    try{
-        const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT"});
-        showTasks();
-    } catch(e){
-
+    const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT"});
+    if(!response.ok){
+        showError("Failed to mark task as completed!");
     }
+    showTasks();
 }
 
 async function deleteTask(id){
-    try{
-        const response = await fetch(tasksApiUrl + "/" + id, {method: "DELETE"});
-        showTasks();
-    } catch(e){
-
+    const response = await fetch(tasksApiUrl + "/" + id, {method: "DELETE"});
+    if(!response.ok){
+        showError("Failed to delete task!");
     }
+    showTasks();
+}
+
+function showError(message) {
+    document.getElementById("errorMessage").innerText = message;
+    document.getElementById("errorModal").classList.remove("hidden");
+}
+
+function closeError() {
+    document.getElementById("errorModal").classList.add("hidden");
 }
