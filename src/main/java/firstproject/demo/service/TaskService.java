@@ -36,6 +36,12 @@ public class TaskService {
         if(task.getTitle() == null || task.getTitle().isBlank()) {
             throw new InvalidDataException("Task name is not valid");
         }
+        if(task.getTitle().length() > 100){
+            throw new InvalidDataException("Task name is too long");
+        }
+        if(task.getDescription().length() > 1000){
+            throw new InvalidDataException("Task description is too long");
+        }
         task.setId(UUID.randomUUID().toString());
         task.setCreationDate(LocalDate.now());
         task.setCompleteStatus(false);

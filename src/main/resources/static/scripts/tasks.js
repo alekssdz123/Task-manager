@@ -1,7 +1,6 @@
 const tasksApiUrl = "http://localhost:8080/api/tasks";
 const userId = "rampampam";
 
-
 function isEmpty(input){
     if(input.trim() === ""){
         return true;
