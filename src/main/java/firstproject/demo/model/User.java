@@ -17,6 +17,14 @@ public class User {
         this.createdAt = LocalDate.now();
     }
 
+    public User(User otherUser){
+        this.userId = otherUser.getUserId();
+        this.username = otherUser.getUsername();
+        this.password = otherUser.getPassword();
+        this.email = otherUser.getEmail();
+        this.createdAt = otherUser.getCreationDate();
+    }
+
     public String getUserId(){
         return this.userId;
     }
