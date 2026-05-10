@@ -182,3 +182,33 @@ h1 {
 .modal-content button:hover {
     background: #d32f2f;
 }
+
+.edit {
+    background: orange;
+    color: white;
+}
+
+.edit:hover {
+    background: darkorange;
+}
+
+#updateModal .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#updateModal input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.modal-content .save-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.modal-content .save-btn:hover {
+    background: #45a049;
+}

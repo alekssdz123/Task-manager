@@ -68,5 +68,12 @@ public class TaskService {
         task.setCompleteStatus(true);
         return task;
     }
+
+    public Task updateTask(String id, Task newTask){
+        Task task = getById(id);
+        task.setTitle(newTask.getTitle());
+        task.setTaskDescription(newTask.getDescription());
+        return task;
+    }
 }
 

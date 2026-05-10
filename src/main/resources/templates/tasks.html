@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="top-bar">
-        <button id="authBtn">Войти</button>
+        <button id="authBtn">Login</button>
     </div>
 
 <div class="container">
@@ -17,8 +17,8 @@
 
     <!-- Creating task form -->
     <div class="task-form">
-        <input type="text" placeholder="Название задачи" id="taskTitle">
-        <input type="text" placeholder="Описание" id="taskDescription">
+        <input type="text" placeholder="Task name" id="taskTitle">
+        <input type="text" placeholder="Description" id="taskDescription">
         <button id="addBtn">Add</button>
     </div>
 
@@ -33,6 +33,21 @@
     <div class="modal-content">
         <p id="errorMessage"></p>
         <button onclick="closeError()">OK</button>
+    </div>
+</div>
+
+<!-- Update Task Modal -->
+<div id="updateModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Update task</h3>
+
+        <input type="text" id="updateTaskTitle" placeholder="Task name">
+        <input type="text" id="updateTaskDescription" placeholder="Description">
+
+        <div style="margin-top:15px;">
+            <button id="saveUpdateBtn" class="save-btn">Save</button>
+            <button onclick="closeUpdateModal()">Cancel</button>
+        </div>
     </div>
 </div>
 

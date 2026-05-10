@@ -59,5 +59,9 @@ public class TaskController {
         service.markAsCompleted(id);
     }
 
-    // ADD FILTERING BY COMPLETE STATUS LATER (Uncolmpleted first)
+    @PutMapping("/{id}")
+    public void updateTask(@PathVariable String id, @RequestBody Task task){
+        logger.info("PUT REQUEST: update task " + id);
+        service.updateTask(id, task);
+    }
 }

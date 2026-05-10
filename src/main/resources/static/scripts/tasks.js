@@ -87,12 +87,15 @@ function createHtmlTaskCard(taskData) {
                 <p>${taskData.creationDate}</p>
             </div>
             <div class="task-actions">
-            ${taskData.completeStatus ? '' : `            
+                ${taskData.completeStatus ? '' : `            
                     <button class="done" data-id="${taskData.id}" onclick="markComplete(this.dataset.id)">✓</button>
-            `}
+                    `}
                     <button class="delete" data-id="${taskData.id}" onclick="deleteTask(this.dataset.id)">✕</button>
-                </div>
+                ${taskData.completeStatus ? '' : `            
+                    <button class="edit" onclick='openUpdateModal(${JSON.stringify(taskData)})'> ✎ </button>
+                    `}
             </div>
+        </div>
     `};
 
 async function showTasks(){
@@ -120,8 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("errorModal").addEventListener("click", function(e) {
     if (e.target === this) {
         closeError();
-    }
-});
+    }});
+
+    document.getElementById("updateModal").addEventListener("click", function(e){
+        if(e.target === this){
+            closeUpdateModal();
+        }
+    });
 })
 
 async function markComplete(id){
@@ -148,3 +156,61 @@ function showError(message) {
 function closeError() {
     document.getElementById("errorModal").classList.add("hidden");
 }
+
+let currentTaskId;
+
+function openUpdateModal(task) {
+    currentTaskId = task.id;
+
+    document.getElementById("updateTaskTitle").value = task.title;
+    document.getElementById("updateTaskDescription").value = task.description;
+
+    document.getElementById("updateModal").classList.remove("hidden");
+}
+
+function closeUpdateModal() {
+    document.getElementById("updateModal").classList.add("hidden");
+}
+
+async function updateTask() {
+    const title = document.getElementById("updateTaskTitle").value;
+    const description = document.getElementById("updateTaskDescription").value;
+
+    if (isEmpty(title)) {
+        showError("Empty task name!");
+        return;
+    }
+
+    if (!validTitle(title)) {
+        showError("Title can not be longer than 100 symbols!");
+        return;
+    }
+
+    if (!validDescription(description)) {
+        showError("Description can not be longer than 1000 symbols!");
+        return;
+    }
+
+    const response = await fetch(tasksApiUrl + "/" + currentTaskId, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "userId": userId,
+            "title": title,
+            "taskDescription": description
+        })
+    });
+
+    if (!response.ok) {
+        closeUpdateModal();
+        showError("Failed to update task!");
+        return;
+    }
+
+    closeUpdateModal();
+    showTasks();
+}
+
+document.getElementById("saveUpdateBtn").addEventListener("click", updateTask);
