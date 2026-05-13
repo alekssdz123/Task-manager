@@ -2,34 +2,30 @@ package firstproject.demo.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import firstproject.demo.model.Task;
+import firstproject.demo.repository.TaskRepository;
 import firstproject.demo.exception.InvalidDataException;
 import firstproject.demo.exception.NotFoundException;
 
 @Service
 public class TaskService {
-    private ArrayList<Task> tasks;
+    private final TaskRepository repo;
 
-    public TaskService(){
-        this.tasks = new ArrayList<Task>();
+    public TaskService(TaskRepository repo){
+        this.repo = repo;
     }
 
-    public ArrayList<Task> getAllTasks(){
-        return new ArrayList<>(this.tasks);
+    public List<Task> getAllTasks(){
+        return repo.findAll();
     }
 
-    public ArrayList<Task> getUserTasks(UUID userId){
-        ArrayList<Task> userTasks = new ArrayList<>();
-        for(Task task : this.tasks){
-            if(userId.equals(task.getUserId())){
-                userTasks.add(task);
-            }
-        }
-        return userTasks;
+    public List<Task> getUserTasks(UUID userId){
+        return repo.findByUserId(userId);
     }
 
     public Task addTask(Task task) {
@@ -42,38 +38,30 @@ public class TaskService {
         if(task.getDescription().length() > 1000){
             throw new InvalidDataException("Task description is too long");
         }
-        task.setId(UUID.randomUUID());
         task.setCreationDate(LocalDate.now());
         task.setCompleteStatus(false);
-        tasks.add(task);
+        repo.save(task);
         return task;
     }
 
     public Task getById(UUID taskId){
-        for(Task task : this.tasks){
-            if(taskId.equals(task.getId())){
-                return task;
-            }
-        }
-        throw new NotFoundException("Task not found");
+        Task task = repo.findById(taskId).orElseThrow(() -> new NotFoundException("Task not found"));
+        return task;
     }
 
     public void deleteTask(UUID taskId){
-        Task task = getById(taskId);
-        tasks.remove(task);
+        repo.deleteById(taskId);
     }
     
-    public Task markAsCompleted(UUID taskId){
-        Task task = getById(taskId);
-        task.setCompleteStatus(true);
-        return task;
+    public void markAsCompleted(UUID taskId){
+        repo.markAsCompleted(taskId);
     }
 
-    public Task updateTask(UUID id, Task newTask){
+    public void updateTask(UUID id, Task newTask){
         Task task = getById(id);
         task.setTitle(newTask.getTitle());
         task.setTaskDescription(newTask.getDescription());
-        return task;
+        repo.save(task);
     }
 }
 
