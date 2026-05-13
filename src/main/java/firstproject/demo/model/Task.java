@@ -1,10 +1,21 @@
 package firstproject.demo.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tasks")
 public class Task {
-    private String id;
-    private String userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private UUID userId;
     private String title;
     private String taskDescription;
     private boolean completed;
@@ -25,13 +36,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return this.id + ", " + this.userId +  ", " + this.title + ", " + this.taskDescription + ", " + String.valueOf(this.completed) + ", " + this.createdAt.toString();
+        return this.id.toString() + ", " + this.userId.toString() +  ", " + this.title + ", " + this.taskDescription + ", " + String.valueOf(this.completed) + ", " + this.createdAt.toString();
     }
 
-    public String getId(){
+    public UUID getId(){
         return this.id;
     }
-    public String getUserId(){
+    public UUID getUserId(){
         return this.userId;
     }
     public String getTitle(){
@@ -47,10 +58,10 @@ public class Task {
         return this.createdAt;
     }
 
-    public void setId(String id){
+    public void setId(UUID id){
         this.id = id;
     }
-    public void setUserId(String userId){
+    public void setUserId(UUID userId){
         this.userId = userId;
     }
     public void setTitle(String taskTitle){

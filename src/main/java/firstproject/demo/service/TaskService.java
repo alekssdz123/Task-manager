@@ -22,7 +22,7 @@ public class TaskService {
         return new ArrayList<>(this.tasks);
     }
 
-    public ArrayList<Task> getUserTasks(String userId){
+    public ArrayList<Task> getUserTasks(UUID userId){
         ArrayList<Task> userTasks = new ArrayList<>();
         for(Task task : this.tasks){
             if(userId.equals(task.getUserId())){
@@ -42,14 +42,14 @@ public class TaskService {
         if(task.getDescription().length() > 1000){
             throw new InvalidDataException("Task description is too long");
         }
-        task.setId(UUID.randomUUID().toString());
+        task.setId(UUID.randomUUID());
         task.setCreationDate(LocalDate.now());
         task.setCompleteStatus(false);
         tasks.add(task);
         return task;
     }
 
-    public Task getById(String taskId){
+    public Task getById(UUID taskId){
         for(Task task : this.tasks){
             if(taskId.equals(task.getId())){
                 return task;
@@ -58,18 +58,18 @@ public class TaskService {
         throw new NotFoundException("Task not found");
     }
 
-    public void deleteTask(String taskId){
+    public void deleteTask(UUID taskId){
         Task task = getById(taskId);
         tasks.remove(task);
     }
     
-    public Task markAsCompleted(String taskId){
+    public Task markAsCompleted(UUID taskId){
         Task task = getById(taskId);
         task.setCompleteStatus(true);
         return task;
     }
 
-    public Task updateTask(String id, Task newTask){
+    public Task updateTask(UUID id, Task newTask){
         Task task = getById(id);
         task.setTitle(newTask.getTitle());
         task.setTaskDescription(newTask.getDescription());

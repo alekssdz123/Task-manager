@@ -1,6 +1,7 @@
 package firstproject.demo.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAll(@RequestParam String userId){
+    public List<Task> getAll(@RequestParam UUID userId){
         logger.info("GET request: get all tasks");
         return service.getUserTasks(userId);
     }
@@ -42,25 +43,25 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable String id){
+    public Task getTaskById(@PathVariable UUID id){
         logger.info("GET request: get task by id");
         return service.getById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTaskById(@PathVariable String id){
+    public void deleteTaskById(@PathVariable UUID id){
         logger.info("DELETE request: delete task by id");
         service.deleteTask(id);
     }
 
     @PutMapping("/{id}/complete")
-    public void markTaskAsComplete(@PathVariable String id){
+    public void markTaskAsComplete(@PathVariable UUID id){
         logger.info("PUT REQUEST: mark task as completed");
         service.markAsCompleted(id);
     }
 
     @PutMapping("/{id}")
-    public void updateTask(@PathVariable String id, @RequestBody Task task){
+    public void updateTask(@PathVariable UUID id, @RequestBody Task task){
         logger.info("PUT REQUEST: update task " + id);
         service.updateTask(id, task);
     }
