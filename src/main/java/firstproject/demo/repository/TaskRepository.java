@@ -18,5 +18,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID>{
     void markAsCompleted(@Param("id") UUID id);
 
     List<Task> findByUserId(UUID userId);
+    List<Task> findByUserIdOrderByCompletedAsc(UUID userId);
 
 }

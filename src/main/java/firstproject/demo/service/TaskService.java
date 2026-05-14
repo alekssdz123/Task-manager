@@ -24,7 +24,7 @@ public class TaskService {
     }
 
     public List<Task> getUserTasks(UUID userId){
-        return repo.findByUserId(userId);
+        return repo.findByUserIdOrderByCompletedAsc(userId);
     }
 
     public Task addTask(Task task) {

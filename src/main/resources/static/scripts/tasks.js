@@ -114,30 +114,15 @@ async function showTasks(){
 
 function eventListener(){
     document.getElementById("addBtn").addEventListener("click", addTask);
+    document.getElementById("saveUpdateBtn").addEventListener("click", updateTask);
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    eventListener();
-    showTasks();
-
-    document.getElementById("errorModal").addEventListener("click", function(e) {
-    if (e.target === this) {
-        closeError();
-    }});
-
-    document.getElementById("updateModal").addEventListener("click", function(e){
-        if(e.target === this){
-            closeUpdateModal();
-        }
-    });
-})
 
 async function markComplete(id){
     const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT"});
     if(!response.ok){
         showError("Failed to mark task as completed!");
     }
-    showTasks();
+    await showTasks();
 }
 
 async function deleteTask(id){
@@ -145,7 +130,7 @@ async function deleteTask(id){
     if(!response.ok){
         showError("Failed to delete task!");
     }
-    showTasks();
+    await showTasks();
 }
 
 function showError(message) {
@@ -161,10 +146,10 @@ let currentTaskId;
 
 function openUpdateModal(task) {
     currentTaskId = task.id;
-
+    
     document.getElementById("updateTaskTitle").value = task.title;
     document.getElementById("updateTaskDescription").value = task.description;
-
+    
     document.getElementById("updateModal").classList.remove("hidden");
 }
 
@@ -175,22 +160,22 @@ function closeUpdateModal() {
 async function updateTask() {
     const title = document.getElementById("updateTaskTitle").value;
     const description = document.getElementById("updateTaskDescription").value;
-
+    
     if (isEmpty(title)) {
         showError("Empty task name!");
         return;
     }
-
+    
     if (!validTitle(title)) {
         showError("Title can not be longer than 100 symbols!");
         return;
     }
-
+    
     if (!validDescription(description)) {
         showError("Description can not be longer than 1000 symbols!");
         return;
     }
-
+    
     const response = await fetch(tasksApiUrl + "/" + currentTaskId, {
         method: "PUT",
         headers: {
@@ -202,15 +187,30 @@ async function updateTask() {
             "taskDescription": description
         })
     });
-
+    
     if (!response.ok) {
         closeUpdateModal();
         showError("Failed to update task!");
         return;
     }
-
+    
     closeUpdateModal();
-    showTasks();
+    await showTasks();
 }
 
-document.getElementById("saveUpdateBtn").addEventListener("click", updateTask);
+
+document.addEventListener("DOMContentLoaded", () => {
+    eventListener();
+    await showTasks();
+    
+    document.getElementById("errorModal").addEventListener("click", function(e) {
+    if (e.target === this) {
+        closeError();
+    }});
+
+    document.getElementById("updateModal").addEventListener("click", function(e){
+        if(e.target === this){
+            closeUpdateModal();
+        }
+    });
+});
