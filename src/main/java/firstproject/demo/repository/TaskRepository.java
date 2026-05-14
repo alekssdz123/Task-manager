@@ -9,9 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import firstproject.demo.model.Task;
+import jakarta.transaction.Transactional;
 
 public interface TaskRepository extends JpaRepository<Task, UUID>{
     @Modifying
+    @Transactional
     @Query("UPDATE Task t SET t.completed = true WHERE t.id = :id")
     void markAsCompleted(@Param("id") UUID id);
 
