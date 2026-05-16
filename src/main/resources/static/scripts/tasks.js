@@ -115,6 +115,9 @@ async function showTasks(){
 function eventListener(){
     document.getElementById("addBtn").addEventListener("click", addTask);
     document.getElementById("saveUpdateBtn").addEventListener("click", updateTask);
+    document.getElementById("authBtn").addEventListener("click", function(e){
+        window.location.href = "/login";
+    })
 }
 
 async function markComplete(id){
@@ -199,7 +202,7 @@ async function updateTask() {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     eventListener();
     await showTasks();
     

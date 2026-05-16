@@ -22,4 +22,10 @@ public class GlobalExceptionHandler {
         logger.error("InavlidDataException: " + e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(DataBaseException.class)
+        public ResponseEntity<String> handleDataBase(DataBaseException e){
+            logger.error("DataBaseException: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import firstproject.demo.model.Task;
 import firstproject.demo.repository.TaskRepository;
+import firstproject.demo.exception.DataBaseException;
 import firstproject.demo.exception.InvalidDataException;
 import firstproject.demo.exception.NotFoundException;
 
@@ -20,14 +21,22 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks(){
-        return repo.findAll();
+        try{
+            return repo.findAll();
+        } catch(Exception e){
+            throw new DataBaseException("Failed to get all tasks");
+        }
     }
 
     public List<Task> getUserTasks(UUID userId){
-        return repo.findByUserIdOrderByCompletedAsc(userId);
+        try{
+            return repo.findByUserIdOrderByCompletedAsc(userId);
+        } catch(Exception e){
+            throw new DataBaseException("Failed to get user tasks");
+        }
     }
 
-    public Task addTask(Task task) {
+    public void validateTask(Task task){
         if(task.getTitle() == null || task.getTitle().isBlank()) {
             throw new InvalidDataException("Task name is not valid");
         }
@@ -37,30 +46,54 @@ public class TaskService {
         if(task.getDescription().length() > 1000){
             throw new InvalidDataException("Task description is too long");
         }
-        task.setCreationDate(LocalDate.now());
-        task.setCompleteStatus(false);
-        repo.save(task);
-        return task;
+    }
+
+    public Task addTask(Task task) {
+        validateTask(task);
+        try{
+            task.setCreationDate(LocalDate.now());
+            task.setCompleteStatus(false);
+            repo.save(task);
+            return task;
+        } catch(Exception e){
+            throw new DataBaseException("Failed to save new task");
+        }
     }
 
     public Task getById(UUID taskId){
-        Task task = repo.findById(taskId).orElseThrow(() -> new NotFoundException("Task not found"));
-        return task;
+        try{
+            Task task = repo.findById(taskId).orElseThrow(() -> new NotFoundException("Task not found"));
+            return task;
+        } catch(Exception e){
+            throw new DataBaseException("Failed to get task by id");
+        }
     }
 
     public void deleteTask(UUID taskId){
-        repo.deleteById(taskId);
+        try{
+            repo.deleteById(taskId);
+        } catch(Exception e){
+            throw new DataBaseException("Failed to delete task");
+        }
     }
     
     public void markAsCompleted(UUID taskId){
-        repo.markAsCompleted(taskId);
+        try{
+            repo.markAsCompleted(taskId);
+        } catch(Exception e){
+            throw new DataBaseException("Failed to mark task as completed");
+        }
     }
 
     public void updateTask(UUID id, Task newTask){
-        Task task = getById(id);
-        task.setTitle(newTask.getTitle());
-        task.setTaskDescription(newTask.getDescription());
-        repo.save(task);
+        try{
+            Task task = getById(id);
+            task.setTitle(newTask.getTitle());
+            task.setTaskDescription(newTask.getDescription());
+            repo.save(task);
+        } catch(Exception e){
+            throw new DataBaseException("Failed to update task");
+        }
     }
 }
 

@@ -2,27 +2,29 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Registration</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
 
 <div class="login-container">
 
-    <h1>Login</h1>
+    <h1>Registration</h1>
 
     <div class="login-form">
         <input type="text" id="username" placeholder="Login">
+        <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Password">
-        <button id="loginBtn">Login</button>
+        <input type="password" id="password" placeholder="Repeat your password">
+        <button id="loginBtn">Register</button>
     </div>
 
     <p class="register-link">
-        Don't have an account? <button id="reg_btn">Register</button>
+        Already have an account? <button id="log_btn">Login</button>
     </p>
 
 </div>
 
 </body>
-<script th:src="@{/scripts/login.js}"></script>
+<script th:src="@{/scripts/registration.js}"></script>
 </html>

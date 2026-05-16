@@ -2,12 +2,26 @@ package firstproject.demo.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
     private String username;
     private String password;
     private String email;
     private LocalDate createdAt;
+
+    public User(){
+
+    }
 
     public User(String userId, String username, String password, String email){
         this.userId = userId;
