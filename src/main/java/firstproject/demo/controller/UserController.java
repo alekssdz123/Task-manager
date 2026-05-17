@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import firstproject.demo.service.UserService;
 import firstproject.demo.model.User;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/auth/register")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final UserService service;
@@ -23,17 +25,20 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUser(@RequestBody User user){
+    public void addUser(@RequestBody User user, HttpServletRequest request){
+        String client = request.getRemoteAddr();
         logger.info("POST request: add new user");
     }
 
     @PutMapping
-    public void updateUser(){
+    public void updateUser(HttpServletRequest request){
+        String client = request.getRemoteAddr();
         logger.info("PUT request: update user");
     }
 
     @DeleteMapping
-    public void deleteUser(){
+    public void deleteUser(HttpServletRequest request){
+        String client = request.getRemoteAddr();
         logger.info("DELETE request: delete user");
     }
 }

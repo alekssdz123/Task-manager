@@ -74,3 +74,13 @@ h1 {
 .register-link button:hover {
     text-decoration: underline;
 }
+
+.error-message{
+    font-size: 13px;
+    color: #df3232;
+}
+
+.success-message{
+    font-size: 13px;
+    color: #4caf50;
+}
