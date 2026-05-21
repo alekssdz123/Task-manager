@@ -27,18 +27,18 @@ public class UserController {
     @PostMapping
     public void addUser(@RequestBody User user, HttpServletRequest request){
         String client = request.getRemoteAddr();
-        logger.info("POST request: add new user");
+        logger.info(client + " POST request: add new user");
     }
 
     @PutMapping
     public void updateUser(HttpServletRequest request){
         String client = request.getRemoteAddr();
-        logger.info("PUT request: update user");
+        logger.info(client + " PUT request: update user");
     }
 
     @DeleteMapping
     public void deleteUser(HttpServletRequest request){
         String client = request.getRemoteAddr();
-        logger.info("DELETE request: delete user");
+        logger.info(client + " DELETE request: delete user");
     }
 }
