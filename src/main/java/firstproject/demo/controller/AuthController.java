@@ -16,11 +16,11 @@ import firstproject.demo.model.User;
 
 @RestController
 @RequestMapping("/auth/register")
-public class UserController {
+public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final UserService service;
 
-    public UserController(UserService service){
+    public AuthController(UserService service){
         this.service = service;
     }
 
