@@ -12,21 +12,21 @@ public class PageController {
     private static final Logger logger = LoggerFactory.getLogger(PageController.class);
 
     @GetMapping("/login")
-    public String loginPage(HttpServletRequest request){
+    public static String loginPage(HttpServletRequest request){
         String client = request.getRemoteAddr();
         logger.info(client + " GET request: get login page");
         return "login";
     }
 
     @GetMapping("/registration")
-    public String regPage(HttpServletRequest request){
+    public static String regPage(HttpServletRequest request){
         String client = request.getRemoteAddr();
         logger.info(client + " GET request: get registration page");
         return "register";
     }
 
     @GetMapping("/")
-    public String tasksPage(HttpServletRequest request){
+    public static String tasksPage(HttpServletRequest request){
         String client = request.getRemoteAddr();
         logger.info(client + " GET request: get tasks page");
         return "tasks";

@@ -1,6 +1,7 @@
 package firstproject.demo.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +14,7 @@ import jakarta.persistence.Table;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String userId;
+    private UUID id;
     private String username;
     private String password;
     private String email;
@@ -23,8 +24,8 @@ public class User {
 
     }
 
-    public User(String userId, String username, String password, String email){
-        this.userId = userId;
+    public User(UUID userId, String username, String password, String email){
+        this.id = userId;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -32,15 +33,15 @@ public class User {
     }
 
     public User(User otherUser){
-        this.userId = otherUser.getUserId();
+        this.id = otherUser.getUserId();
         this.username = otherUser.getUsername();
         this.password = otherUser.getPassword();
         this.email = otherUser.getEmail();
         this.createdAt = otherUser.getCreationDate();
     }
 
-    public String getUserId(){
-        return this.userId;
+    public UUID getUserId(){
+        return this.id;
     }
     public String getUsername(){
         return this.username;
@@ -55,8 +56,8 @@ public class User {
         return this.createdAt;
     }
 
-    public void setUserId(String userId){
-        this.userId = userId;
+    public void setUserId(UUID userId){
+        this.id = userId;
     }
     public void setUsername(String username){
         this.username = username;

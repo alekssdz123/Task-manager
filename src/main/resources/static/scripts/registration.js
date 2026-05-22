@@ -2,7 +2,7 @@ const apiUrl = "http://localhost:8080/auth/register";
 
 document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("log_btn").addEventListener("click", function(e){
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
     });
     document.getElementById("regBtn").addEventListener("click", register);
 });

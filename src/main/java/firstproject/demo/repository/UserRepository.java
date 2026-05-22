@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import firstproject.demo.model.Task;
+import firstproject.demo.model.User;
 
-public interface UserRepository extends JpaRepository<Task, UUID>{
-    List<Task> findByUserId(UUID userId);
-    List<Task> findByUserIdOrderByCompletedAsc(UUID userId);
+public interface UserRepository extends JpaRepository<User, UUID>{
+    List<User> findByUserId(UUID userId);
+    List<User> findByUsername(String username);
 
 }

@@ -1,44 +1,46 @@
 package firstproject.demo.controller;
 
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+
 import org.slf4j.Logger;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import firstproject.demo.model.User;
+import firstproject.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 
-import firstproject.demo.service.UserService;
-import firstproject.demo.model.User;
-
-@RestController
-@RequestMapping("/auth/register")
+@Controller
+@RequestMapping("/auth")
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
-    private final UserService service;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService service){
-        this.service = service;
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;        
+    }
+    @GetMapping("/register")
+    public String userPage(HttpServletRequest request){
+        return "register";
     }
 
-    @PostMapping
-    public void addUser(@RequestBody User user, HttpServletRequest request){
-        String client = request.getRemoteAddr();
-        logger.info(client + " POST request: add new user");
+    @PostMapping("/register")
+    @ResponseBody
+    public String register(@RequestBody User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreationDate(LocalDate.now());
+        userRepository.save(user);
+        logger.info("New user " + user.getUserId() + " registered");
+        return "redirect:/auth/register";
     }
 
-    @PutMapping
-    public void updateUser(HttpServletRequest request){
-        String client = request.getRemoteAddr();
-        logger.info(client + " PUT request: update user");
-    }
-
-    @DeleteMapping
-    public void deleteUser(HttpServletRequest request){
-        String client = request.getRemoteAddr();
-        logger.info(client + " DELETE request: delete user");
-    }
 }

@@ -19,7 +19,7 @@ public class UserService {
         this.users = new ArrayList<>();
     }
 
-    public User getUserById(String userId){
+    public User getUserById(UUID userId){
         for(User user : this.users){
             if(userId.equals(user.getUserId())){
                 return user;
@@ -74,11 +74,11 @@ public class UserService {
         validateUserData(user);
         normalizeData(user);
         checkIfUserExists(user);
-        user.setUserId(UUID.randomUUID().toString());
+        user.setUserId(UUID.randomUUID());
         this.users.add(user);
     }
 
-    public void deleteUser(String userId){
+    public void deleteUser(UUID userId){
         User user = getUserById(userId);
         this.users.remove(user);
     }
