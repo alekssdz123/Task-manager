@@ -23,9 +23,15 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/auth/login", "/auth/register").permitAll()
                 .requestMatchers("/css/**", "/scripts/**").permitAll()
-            .anyRequest().authenticated());
+                .requestMatchers("/").authenticated()
+            .anyRequest().authenticated())
+            .formLogin(form -> form.disable())
+            .logout(logout -> logout
+                .logoutSuccessUrl("/auth/login")
+                .permitAll()
+            );
 
         return http.build();
     }

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 
 import org.slf4j.Logger;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,9 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;        
     }
     @GetMapping("/register")
-    public String userPage(HttpServletRequest request){
+    public String regrPage(HttpServletRequest request){
+        String client = request.getRemoteAddr();
+        logger.info(client + " GET request: registration page");
         return "register";
     }
 
@@ -43,4 +46,22 @@ public class AuthController {
         return "redirect:/auth/register";
     }
 
+    @GetMapping("/login")
+    public String loginPage(HttpServletRequest request){
+        String client = request.getRemoteAddr();
+        logger.info(client + " GET request: login page");
+        return "login";
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseEntity<?> login(@RequestBody User request) {
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(401).body("Wrong password");
+        }
+
+        return ResponseEntity.ok("OK");
+    }
 }
