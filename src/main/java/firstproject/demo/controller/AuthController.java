@@ -3,10 +3,16 @@ package firstproject.demo.controller;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import firstproject.demo.exception.InvalidDataException;
 import firstproject.demo.model.User;
 import firstproject.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/auth")
@@ -55,12 +63,21 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> login(@RequestBody User request) {
+    public ResponseEntity<?> login(@RequestBody User request, HttpServletRequest httpRequest) {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(401).body("Wrong password");
+            throw new InvalidDataException("Wrong password");
         }
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), null, Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        
+        HttpSession session = httpRequest.getSession(true);
+        session.setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            SecurityContextHolder.getContext()
+        );
 
         return ResponseEntity.ok("OK");
     }
