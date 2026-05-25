@@ -56,7 +56,7 @@ public class TaskService {
             repo.save(task);
             return task;
         } catch(Exception e){
-            throw new DataBaseException("Failed to save new task");
+            throw new DataBaseException("Failed to save new task : " + task.toString());
         }
     }
 

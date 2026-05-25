@@ -42,7 +42,7 @@ async function login() {
 
         setTimeout(() => {
             window.location.href = "/";
-        }, 1000);
+        }, 500);
 
     } catch(e){
         showError("Server error: " + e.message);

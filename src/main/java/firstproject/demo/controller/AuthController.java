@@ -3,10 +3,10 @@ package firstproject.demo.controller;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,10 +31,12 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;        
+        this.authenticationManager = authenticationManager;
     }
     @GetMapping("/register")
     public String regrPage(HttpServletRequest request){
@@ -69,7 +71,7 @@ public class AuthController {
             throw new InvalidDataException("Wrong password");
         }
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), null, Collections.emptyList());
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         
         HttpSession session = httpRequest.getSession(true);

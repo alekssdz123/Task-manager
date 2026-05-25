@@ -2,8 +2,7 @@ package firstproject.demo.service;
 
 import firstproject.demo.model.User;
 import firstproject.demo.repository.UserRepository;
-
-import java.util.Collections;
+import firstproject.demo.security.CustomUserDetails;
 
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -22,10 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.emptyList()
-        );
+        return new CustomUserDetails(user);
     }
 }
