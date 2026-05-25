@@ -1,5 +1,4 @@
 const tasksApiUrl = "http://localhost:8080/api/tasks";
-const userId = "5c5be987-ceb9-4a1e-b990-efd11a2f2966";
 
 function isEmpty(input){
     if(input.trim() === ""){
@@ -50,11 +49,11 @@ async function addTask(){
     }
     const response = await fetch(tasksApiUrl, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            "userId": userId,
             "title": newTaskData.title,
             "taskDescription": newTaskData.taskDescription
         })
@@ -69,7 +68,7 @@ async function addTask(){
 }
 
 async function getAllTasks(){   
-    const response = await fetch(tasksApiUrl + "?userId=" + userId);
+    const response = await fetch(tasksApiUrl, {credentials: "include"});
     if(!response.ok){
         showError("Failed to get your tasks!");
         return;
@@ -121,7 +120,7 @@ function eventListener(){
 }
 
 async function markComplete(id){
-    const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT"});
+    const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT", credentials: "include"});
     if(!response.ok){
         showError("Failed to mark task as completed!");
     }
@@ -129,7 +128,7 @@ async function markComplete(id){
 }
 
 async function deleteTask(id){
-    const response = await fetch(tasksApiUrl + "/" + id, {method: "DELETE"});
+    const response = await fetch(tasksApiUrl + "/" + id, {method: "DELETE", credentials: "include"});
     if(!response.ok){
         showError("Failed to delete task!");
     }
@@ -181,11 +180,11 @@ async function updateTask() {
     
     const response = await fetch(tasksApiUrl + "/" + currentTaskId, {
         method: "PUT",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            "userId": userId,
             "title": title,
             "taskDescription": description
         })
