@@ -1,19 +1,49 @@
 const tasksApiUrl = "http://localhost:8080/api/tasks";
+const authApiUrl = "http://localhost:8080/auth/login";
+
+function getToken() {
+    return localStorage.getItem("token");
+}
+
+function setToken(token) {
+    localStorage.setItem("token", token);
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/auth/login";
+}
+
+async function apiFetch(url, options = {}) {
+    const token = getToken();
+
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { "Authorization": "Bearer " + token } : {}),
+            ...(options.headers || {})
+        }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+        window.location.href = "/auth/login";
+        return null;
+    }
+
+    return response;
+}
 
 function isEmpty(input){
-    if(input.trim() === ""){
-        return true;
-    } return false;
+    return input.trim() === "";
 }
+
 function validTitle(title){
-    if(title.length > 100){
-        return false;
-    } return true;
+    return title.length <= 100;
 }
+
 function validDescription(description){
-    if(description.length > 1000){
-        return false;
-    } return true;
+    return description.length <= 1000;
 }
 
 function getNewTaskData(){
@@ -24,57 +54,115 @@ function getNewTaskData(){
         showError("Empty task name!");
         return false;
     }
+
     if(!validTitle(title)){
         showError("Title can not be longer than 100 symbols!");
         return false;
     }
+
     if(!validDescription(description)){
         showError("Description can not be longer than 1000 symbols!");
         return false;
     }
 
-    const data = {
-        "title": title,
-        "taskDescription": description
-    }
     document.getElementById("taskTitle").value = "";
     document.getElementById("taskDescription").value = "";
-    return data;
+
+    return {
+        title,
+        taskDescription: description
+    };
 }
 
 async function addTask(){
     const newTaskData = getNewTaskData();
-    if(!newTaskData){
+    if(!newTaskData) return;
+
+    const response = await apiFetch(tasksApiUrl, {
+        method: "POST",
+        body: JSON.stringify(newTaskData)
+    });
+
+    if(!response || !response.ok){
+        showError("Failed to save task!");
         return;
     }
-    const response = await fetch(tasksApiUrl, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            "title": newTaskData.title,
-            "taskDescription": newTaskData.taskDescription
-        })
-    });
-    if(!response.ok){
-        showError("Failed to save task!");
-        return null;
-    }
-    const data = await response.json();
-    console.log(data);
-    showTasks();
+
+    await showTasks();
 }
 
-async function getAllTasks(){   
-    const response = await fetch(tasksApiUrl, {credentials: "include"});
-    if(!response.ok){
+async function getAllTasks(){
+    const response = await apiFetch(tasksApiUrl);
+
+    if(!response || !response.ok){
         showError("Failed to get your tasks!");
         return;
     }
-    const data = await response.json();
-    return data;
+
+    return await response.json();
+}
+
+async function markComplete(id){
+    const response = await apiFetch(`${tasksApiUrl}/${id}/complete`, {
+        method: "PUT"
+    });
+
+    if(!response || !response.ok){
+        showError("Failed to mark task as completed!");
+        return;
+    }
+
+    await showTasks();
+}
+
+async function deleteTask(id){
+    const response = await apiFetch(`${tasksApiUrl}/${id}`, {
+        method: "DELETE"
+    });
+
+    if(!response || !response.ok){
+        showError("Failed to delete task!");
+        return;
+    }
+
+    await showTasks();
+}
+
+async function updateTask(){
+    const title = document.getElementById("updateTaskTitle").value;
+    const description = document.getElementById("updateTaskDescription").value;
+
+    if(isEmpty(title)){
+        showError("Empty task name!");
+        return;
+    }
+
+    if(!validTitle(title)){
+        showError("Title can not be longer than 100 symbols!");
+        return;
+    }
+
+    if(!validDescription(description)){
+        showError("Description can not be longer than 1000 symbols!");
+        return;
+    }
+
+    const response = await apiFetch(`${tasksApiUrl}/${currentTaskId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+            title,
+            taskDescription: description
+        })
+    });
+
+    if(!response || !response.ok){
+        closeUpdateModal();
+        showError("Failed to update task!");
+        return;
+    }
+
+    closeUpdateModal();
+    await showTasks();
 }
 
 function createHtmlTaskCard(taskData) {
@@ -85,54 +173,32 @@ function createHtmlTaskCard(taskData) {
                 <p>${taskData.description}</p>
                 <p>${taskData.creationDate}</p>
             </div>
+
             <div class="task-actions">
-                ${taskData.completeStatus ? '' : `            
-                    <button class="done" data-id="${taskData.id}" onclick="markComplete(this.dataset.id)">✓</button>
-                    `}
-                    <button class="delete" data-id="${taskData.id}" onclick="deleteTask(this.dataset.id)">✕</button>
-                ${taskData.completeStatus ? '' : `            
-                    <button class="edit" onclick='openUpdateModal(${JSON.stringify(taskData)})'> ✎ </button>
-                    `}
+                ${taskData.completeStatus ? '' : `
+                    <button class="done" onclick="markComplete(${taskData.id})">✓</button>
+                `}
+
+                <button class="delete" onclick="deleteTask(${taskData.id})">✕</button>
+
+                ${taskData.completeStatus ? '' : `
+                    <button class="edit" onclick='openUpdateModal(${JSON.stringify(taskData)})'>✎</button>
+                `}
             </div>
         </div>
-    `};
+    `;
+}
 
 async function showTasks(){
     const tasks = await getAllTasks();
-    if(tasks === null){
-        return;
-    }
+    if(!tasks) return;
+
     const container = document.getElementById("task-list");
     container.innerHTML = "";
 
     tasks.forEach(task => {
-        const htmlCard = createHtmlTaskCard(task);
-        container.innerHTML += htmlCard;
+        container.innerHTML += createHtmlTaskCard(task);
     });
-}
-
-function eventListener(){
-    document.getElementById("addBtn").addEventListener("click", addTask);
-    document.getElementById("saveUpdateBtn").addEventListener("click", updateTask);
-    document.getElementById("authBtn").addEventListener("click", function(e){
-        window.location.href = "/login";
-    })
-}
-
-async function markComplete(id){
-    const response = await fetch(tasksApiUrl + "/" + id + "/complete", {method: "PUT", credentials: "include"});
-    if(!response.ok){
-        showError("Failed to mark task as completed!");
-    }
-    await showTasks();
-}
-
-async function deleteTask(id){
-    const response = await fetch(tasksApiUrl + "/" + id, {method: "DELETE", credentials: "include"});
-    if(!response.ok){
-        showError("Failed to delete task!");
-    }
-    await showTasks();
 }
 
 function showError(message) {
@@ -148,10 +214,10 @@ let currentTaskId;
 
 function openUpdateModal(task) {
     currentTaskId = task.id;
-    
+
     document.getElementById("updateTaskTitle").value = task.title;
     document.getElementById("updateTaskDescription").value = task.description;
-    
+
     document.getElementById("updateModal").classList.remove("hidden");
 }
 
@@ -159,60 +225,25 @@ function closeUpdateModal() {
     document.getElementById("updateModal").classList.add("hidden");
 }
 
-async function updateTask() {
-    const title = document.getElementById("updateTaskTitle").value;
-    const description = document.getElementById("updateTaskDescription").value;
-    
-    if (isEmpty(title)) {
-        showError("Empty task name!");
-        return;
-    }
-    
-    if (!validTitle(title)) {
-        showError("Title can not be longer than 100 symbols!");
-        return;
-    }
-    
-    if (!validDescription(description)) {
-        showError("Description can not be longer than 1000 symbols!");
-        return;
-    }
-    
-    const response = await fetch(tasksApiUrl + "/" + currentTaskId, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            "title": title,
-            "taskDescription": description
-        })
+function eventListener(){
+    document.getElementById("addBtn").addEventListener("click", addTask);
+    document.getElementById("saveUpdateBtn").addEventListener("click", updateTask);
+
+    document.getElementById("authBtn").addEventListener("click", function(){
+        logout();
     });
-    
-    if (!response.ok) {
-        closeUpdateModal();
-        showError("Failed to update task!");
-        return;
-    }
-    
-    closeUpdateModal();
-    await showTasks();
 }
 
 
 document.addEventListener("DOMContentLoaded", async () => {
     eventListener();
     await showTasks();
-    
+
     document.getElementById("errorModal").addEventListener("click", function(e) {
-    if (e.target === this) {
-        closeError();
-    }});
+        if (e.target === this) closeError();
+    });
 
     document.getElementById("updateModal").addEventListener("click", function(e){
-        if(e.target === this){
-            closeUpdateModal();
-        }
+        if (e.target === this) closeUpdateModal();
     });
 });

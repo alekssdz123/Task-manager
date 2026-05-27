@@ -23,7 +23,7 @@ import firstproject.demo.model.User;
 import firstproject.demo.repository.UserRepository;
 import firstproject.demo.service.TaskService;
 
-@RestController // creates JSON
+@RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/tasks")
 public class TaskController {
