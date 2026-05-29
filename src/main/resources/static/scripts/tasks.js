@@ -176,10 +176,10 @@ function createHtmlTaskCard(taskData) {
 
             <div class="task-actions">
                 ${taskData.completeStatus ? '' : `
-                    <button class="done" onclick="markComplete(${taskData.id})">✓</button>
+                    <button class="done">✓</button>
                 `}
 
-                <button class="delete" onclick="deleteTask(${taskData.id})">✕</button>
+                <button class="delete">✕</button>
 
                 ${taskData.completeStatus ? '' : `
                     <button class="edit" onclick='openUpdateModal(${JSON.stringify(taskData)})'>✎</button>
@@ -187,6 +187,33 @@ function createHtmlTaskCard(taskData) {
             </div>
         </div>
     `;
+}
+
+function bindTaskEvents() {
+    document.querySelectorAll(".task").forEach(task => {
+        const id = task.dataset.id;
+
+        const doneBtn = task.querySelector(".done");
+        const deleteBtn = task.querySelector(".delete");
+        const editBtn = task.querySelector(".edit");
+
+        if (doneBtn) {
+            doneBtn.onclick = () => markComplete(id);
+        }
+
+        deleteBtn.onclick = () => deleteTask(id);
+
+        if (editBtn) {
+            editBtn.onclick = () => {
+                const taskData = {
+                    id,
+                    title: task.querySelector("h3").innerText,
+                    description: task.querySelector("p").innerText
+                };
+                openUpdateModal(taskData);
+            };
+        }
+    });
 }
 
 async function showTasks(){
@@ -199,6 +226,8 @@ async function showTasks(){
     tasks.forEach(task => {
         container.innerHTML += createHtmlTaskCard(task);
     });
+
+    bindTaskEvents();
 }
 
 function showError(message) {
