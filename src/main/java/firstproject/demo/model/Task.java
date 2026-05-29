@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,7 +17,10 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID userId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private String title;
     private String taskDescription;
     private boolean completed;
@@ -27,7 +32,7 @@ public class Task {
 
     public Task(Task otherTask){
         this.id = otherTask.getId();
-        this.userId = otherTask.getUserId();
+        this.user = otherTask.getUser();
         this.title = otherTask.getTitle();
         this.taskDescription = otherTask.getDescription();
         this.completed = otherTask.getCompleteStatus();
@@ -36,14 +41,14 @@ public class Task {
 
     @Override
     public String toString() {
-        return this.id.toString() + ", " + this.userId.toString() +  ", " + this.title + ", " + this.taskDescription + ", " + String.valueOf(this.completed) + ", " + this.createdAt.toString();
+        return this.id.toString() + ", " + this.user.toString() +  ", " + this.title + ", " + this.taskDescription + ", " + String.valueOf(this.completed) + ", " + this.createdAt.toString();
     }
 
     public UUID getId(){
         return this.id;
     }
-    public UUID getUserId(){
-        return this.userId;
+    public User getUser(){
+        return this.user;
     }
     public String getTitle(){
         return this.title;
@@ -61,8 +66,8 @@ public class Task {
     public void setId(UUID id){
         this.id = id;
     }
-    public void setUserId(UUID userId){
-        this.userId = userId;
+    public void setUser(User user){
+        this.user = user;
     }
     public void setTitle(String taskTitle){
         this.title = taskTitle;

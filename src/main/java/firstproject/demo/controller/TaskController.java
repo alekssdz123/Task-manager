@@ -55,9 +55,9 @@ public class TaskController {
 
         String username = auth.getName();
         User user = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found"));
-        UUID userId = user.getUserId();
+        // UUID userId = user.getUserId();
 
-        task.setUserId(userId);
+        task.setUser(user);
         Task savedTask = service.addTask(task);
         return savedTask;
     }
