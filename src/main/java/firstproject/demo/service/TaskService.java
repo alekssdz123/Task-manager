@@ -24,7 +24,7 @@ public class TaskService {
         try{
             return repo.findAll();
         } catch(Exception e){
-            throw new DataBaseException("Failed to get all tasks");
+            throw new DataBaseException("Failed to get all tasks " + e.getMessage());
         }
     }
 
@@ -32,7 +32,7 @@ public class TaskService {
         try{
             return repo.findByUserIdOrderByCompletedAsc(userId);
         } catch(Exception e){
-            throw new DataBaseException("Failed to get user tasks");
+            throw new DataBaseException("Failed to get user tasks " + e.getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ public class TaskService {
             repo.save(task);
             return task;
         } catch(Exception e){
-            throw new DataBaseException("Failed to save new task : " + task.toString());
+            throw new DataBaseException("Failed to save new task : " + task.toString() + " " + e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class TaskService {
             Task task = repo.findById(taskId).orElseThrow(() -> new NotFoundException("Task not found"));
             return task;
         } catch(Exception e){
-            throw new DataBaseException("Failed to get task by id");
+            throw new DataBaseException("Failed to get task by id "  + e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class TaskService {
         try{
             repo.deleteById(taskId);
         } catch(Exception e){
-            throw new DataBaseException("Failed to delete task");
+            throw new DataBaseException("Failed to delete task " + e.getMessage());
         }
     }
     
@@ -81,7 +81,7 @@ public class TaskService {
         try{
             repo.markAsCompleted(taskId);
         } catch(Exception e){
-            throw new DataBaseException("Failed to mark task as completed");
+            throw new DataBaseException("Failed to mark task as completed " + e.getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ public class TaskService {
             task.setTaskDescription(newTask.getDescription());
             repo.save(task);
         } catch(Exception e){
-            throw new DataBaseException("Failed to update task");
+            throw new DataBaseException("Failed to update task " + e.getMessage());
         }
     }
 }
