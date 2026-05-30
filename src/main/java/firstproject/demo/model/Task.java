@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tasks")
@@ -21,7 +23,12 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
+    @NotBlank
+    @Size(max = 100, message = "Task title is required")
     private String title;
+
+    @Size(max = 1000, message = "Task title is too long")
     private String taskDescription;
     private boolean completed;
     private LocalDate createdAt;

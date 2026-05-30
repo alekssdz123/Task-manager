@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import firstproject.demo.exception.NotFoundException;
 import firstproject.demo.model.Task;
 import firstproject.demo.model.User;
@@ -49,13 +50,12 @@ public class TaskController {
         return service.getUserTasks(userId);
     }
     @PostMapping
-    public Task addTask(@RequestBody Task task, Authentication auth, HttpServletRequest request){
+    public Task addTask(@Valid @RequestBody Task task, Authentication auth, HttpServletRequest request){
         String client = request.getRemoteAddr();
         logger.info(client + " POST request: add new task");
 
         String username = auth.getName();
         User user = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found"));
-        // UUID userId = user.getUserId();
 
         task.setUser(user);
         Task savedTask = service.addTask(task);
@@ -84,7 +84,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public void updateTask(@PathVariable UUID id, @RequestBody Task task, HttpServletRequest request){
+    public void updateTask(@PathVariable UUID id, @Valid @RequestBody Task task, HttpServletRequest request){
         String client = request.getRemoteAddr();
         logger.info(client + " PUT REQUEST: update task " + id);
         service.updateTask(id, task);

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import firstproject.demo.model.Task;
 import firstproject.demo.repository.TaskRepository;
 import firstproject.demo.exception.DataBaseException;
-import firstproject.demo.exception.InvalidDataException;
 import firstproject.demo.exception.NotFoundException;
 
 @Service
@@ -36,20 +35,7 @@ public class TaskService {
         }
     }
 
-    public void validateTask(Task task){
-        if(task.getTitle() == null || task.getTitle().isBlank()) {
-            throw new InvalidDataException("Task name is not valid");
-        }
-        if(task.getTitle().length() > 100){
-            throw new InvalidDataException("Task name is too long");
-        }
-        if(task.getDescription().length() > 1000){
-            throw new InvalidDataException("Task description is too long");
-        }
-    }
-
     public Task addTask(Task task) {
-        validateTask(task);
         try{
             task.setCreationDate(LocalDate.now());
             task.setCompleteStatus(false);
