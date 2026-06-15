@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +61,7 @@ public class AuthController {
     @ResponseBody
     public String login(@RequestBody User request) {
 
-        Authentication auth = authenticationManager.authenticate(
+        authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
