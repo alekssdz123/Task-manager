@@ -64,7 +64,7 @@ This project was built to practice:
 
 ```bash
 git clone https://github.com/alekssdz123/Task-manager.git
-cd Task-manager/demo
+cd Task-manager
 ```
 
 ## Running Locally
