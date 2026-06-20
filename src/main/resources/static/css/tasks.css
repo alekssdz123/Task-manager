@@ -1,21 +1,22 @@
 body {
     font-family: Arial, sans-serif;
-    background: #f4f6f8;
+    background: #0f1115;
     margin: 0;
     padding: 0;
+    color: #e5e5e5;
 }
 
 .container {
     width: 600px;
-    margin: 50px auto;
+    margin: 100px auto 50px;
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #ffffff;
+    font-weight: 600;
 }
 
-/* Creating task form */
 .task-form {
     display: flex;
     gap: 10px;
@@ -24,49 +25,63 @@ h1 {
 
 .task-form input {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 12px;
+    border: none;
+    background: #2a2f38;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #e5e5e5;
+    transition: 0.2s;
+}
+
+.task-form input:focus {
+    outline: none;
+    background: #323843;
+    box-shadow: 0 0 0 2px #4caf50;
 }
 
 .task-form button {
-    padding: 10px 15px;
+    padding: 12px 15px;
     border: none;
-    background: #4caf50;
+    background: #3b873e;
     color: white;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 15px;
+    transition: 0.25s;
 }
 
 .task-form button:hover {
-    background: #45a049;
+    background: #44a148;
+    transform: translateY(-2px);
 }
 
-/* Task list */
 .task-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
-/* Task card */
 .task {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
+    background: #1a1d23;
+    padding: 18px;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow:
+        0 6px 15px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(255,255,255,0.05);
 }
 
 .task h3 {
     margin: 0;
+    color: #fff;
 }
 
 .task p {
     margin: 5px 0 0;
-    color: #666;
+    color: #9aa0a6;
     font-size: 14px;
 }
 
@@ -80,29 +95,41 @@ h1 {
     word-break: break-word;
 }
 
-/* Buttons */
 .task-actions button {
     margin-left: 5px;
     border: none;
-    padding: 7px 10px;
-    border-radius: 5px;
+    padding: 7px 12px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
 }
 
 .done {
-    background: #2196f3;
+    background: #1766a7;
     color: white;
+}
+
+.done:hover {
+    background: #1e88e5;
 }
 
 .delete {
-    background: #f44336;
+    background: #a92f26;
     color: white;
 }
 
-/* Completed task */
+.delete:hover {
+    background: #d32f2f;
+}
 
-.completed {
-    opacity: 1;
+.edit {
+    background: #cb7a00;
+    color: white;
+}
+
+.edit:hover {
+    background: #fb8c00;
 }
 
 .completed h3,
@@ -110,7 +137,6 @@ h1 {
     opacity: 0.4;
 }
 
-/* Верхняя панель */
 .top-bar {
     position: fixed;
     top: 50px;
@@ -118,11 +144,10 @@ h1 {
     z-index: 1000;
 }
 
-/* Кнопка авторизации */
 #authBtn {
     padding: 8px 16px;
     border: none;
-    background: #333;
+    background: #2a2f38;
     color: white;
     border-radius: 20px;
     cursor: pointer;
@@ -131,44 +156,34 @@ h1 {
 }
 
 #authBtn:hover {
-    background: #555;
+    background: #323843;
 }
 
-/* Чтоб контент не "лип" к верху */
-.container {
-    width: 600px;
-    margin: 100px auto 50px;
-}
-
-/* Modal background */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Hide modal */
 .hidden {
     display: none;
 }
 
-/* Modal box */
 .modal-content {
-    background: white;
-    padding: 20px 30px;
-    border-radius: 10px;
+    background: #1a1d23;
+    padding: 25px 30px;
+    border-radius: 12px;
     text-align: center;
-    min-width: 250px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    min-width: 260px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
-/* Button */
 .modal-content button {
     margin-top: 15px;
     padding: 8px 15px;
@@ -177,38 +192,31 @@ h1 {
     color: white;
     border-radius: 6px;
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .modal-content button:hover {
     background: #d32f2f;
 }
 
-.edit {
-    background: orange;
-    color: white;
-}
-
-.edit:hover {
-    background: darkorange;
-}
-
 #updateModal .modal-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 #updateModal input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 12px;
+    border: none;
+    background: #2a2f38;
+    border-radius: 8px;
+    color: #e5e5e5;
 }
 
 .modal-content .save-btn {
     background: #4caf50;
-    color: white;
 }
 
 .modal-content .save-btn:hover {
-    background: #45a049;
+    background: #43a047;
 }
